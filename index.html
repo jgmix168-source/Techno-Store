@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techno Store</title>
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --card-bg: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #06b6d4;
+            --shadow: rgba(0, 0, 0, 0.4);
+            --border-radius: 16px;
+        }
+
+        [data-theme="light"] {
+            /* Light Mode */
+            --bg-color: #f1f5f9;
+            --container-bg: #ffffff;
+            --card-bg: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
+            padding: 15px 20px;
+            background: var(--container-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        /* Update Logo Style */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%; /* ធ្វើឱ្យរូបមូល */
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* ពន្លឺជុំវិញរូប */
+        }
+
+        .logo-text {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls button {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: none;
+            padding: 8px 15px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: transform 0.2s;
+        }
+        
+        .controls button:hover {
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title span {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 14px;
+        }
+
+        /* Games Grid - 3D Effect */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 15px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .game-card img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            display: block;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 25px var(--shadow);
+        }
+
+        .game-card.active {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Inputs */
+        .input-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--card-bg);
+            background: var(--card-bg);
+            color: var(--text-main);
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Packages */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .package-card {
+            background: var(--card-bg);
+            padding: 15px 10px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 10px var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .package-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .package-card.active {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .package-price {
+            color: var(--primary);
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Payment */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .payment-card {
+            background: var(--card-bg);
+            padding: 15px 10px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            font-weight: bold;
+        }
+        
+        .payment-card.active {
+            border-color: var(--primary);
+        }
+
+        /* Summary */
+        .summary-box {
+            text-align: center;
+        }
+
+        .summary-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 15px;
+            margin: 0 auto 15px auto;
+            object-fit: cover;
+            display: none; /* Hidden until selected */
+            box-shadow: 0 10px 20px var(--shadow);
+        }
+
+        .summary-details {
+            text-align: left;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .btn-buy {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-buy:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.6);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- ដាក់រូប Logo នៅទីនេះ -->
+            <img src="image_9.png" alt="Logo" class="logo-img">
+            <span class="logo-text">Techno Store</span>
+        </div>
+        <div class="controls">
+            <button id="langToggle" onclick="toggleLanguage()">🇰🇭 ខ្មែរ</button>
+            <button id="themeToggle" onclick="toggleTheme()">☀️ ថ្ងៃ</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Left Side: Selection -->
+        <div class="left-panel">
+            
+            <!-- 1. Select Game (Images Only) -->
+            <div class="section">
+                <div class="section-title"><span>1</span> <span class="t-select-game">ជ្រើសរើសហ្គេម</span></div>
+                <div class="games-grid">
+                    <div class="game-card" onclick="selectGame(this, 'image.png')">
+                        <img src="image.png" alt="Game 1">
+                    </div>
+                    <div class="game-card" onclick="selectGame(this, 'image_2.png')">
+                        <img src="image_2.png" alt="Game 2">
+                    </div>
+                    <div class="game-card" onclick="selectGame(this, 'image_3.png')">
+                        <img src="image_3.png" alt="Game 3">
+                    </div>
+                    <div class="game-card" onclick="selectGame(this, 'image_4.png')">
+                        <img src="image_4.png" alt="Game 4">
+                    </div>
+                    <div class="game-card" onclick="selectGame(this, 'image_5.png')">
+                        <img src="image_5.png" alt="Game 5">
+                    </div>
+                    <div class="game-card" onclick="selectGame(this, 'image_6.png')">
+                        <img src="image_6.png" alt="Game 6">
+                    </div>
+                    <div class="game-card" onclick="selectGame(this, 'image_7.png')">
+                        <img src="image_7.png" alt="Game 7">
+                    </div>
+                    <div class="game-card" onclick="selectGame(this, 'image_8.png')">
+                        <img src="image_8.png" alt="Game 8">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Enter ID -->
+            <div class="section">
+                <div class="section-title"><span>2</span> <span class="t-enter-id">បញ្ចូលលេខសម្គាល់ (ID)</span></div>
+                <div class="input-group">
+                    <input type="text" id="playerId" placeholder="Player ID" class="t-placeholder-id" onkeyup="updateSummary()">
+                    <input type="text" id="zoneId" placeholder="Zone ID (បើមាន)" class="t-placeholder-zone">
+                </div>
+            </div>
+
+            <!-- 3. Select Package -->
+            <div class="section">
+                <div class="section-title"><span>3</span> <span class="t-select-package">ជ្រើសរើសកញ្ចប់</span></div>
+                <div class="packages-grid">
+                    <div class="package-card" onclick="selectPackage(this, '50 💎', '$1.00')">
+                        <div>50 💎</div>
+                        <div class="package-price">$1.00</div>
+                    </div>
+                    <div class="package-card" onclick="selectPackage(this, '250 💎', '$5.00')">
+                        <div>250 💎</div>
+                        <div class="package-price">$5.00</div>
+                    </div>
+                    <div class="package-card" onclick="selectPackage(this, '500 💎', '$10.00')">
+                        <div>500 💎</div>
+                        <div class="package-price">$10.00</div>
+                    </div>
+                    <div class="package-card" onclick="selectPackage(this, '1000 💎', '$19.50')">
+                        <div>1000 💎</div>
+                        <div class="package-price">$19.50</div>
+                    </div>
+                    <div class="package-card" onclick="selectPackage(this, '2500 💎', '$48.00')">
+                        <div>2500 💎</div>
+                        <div class="package-price">$48.00</div>
+                    </div>
+                    <div class="package-card" onclick="selectPackage(this, '5000 💎', '$95.00')">
+                        <div>5000 💎</div>
+                        <div class="package-price">$95.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Payment -->
+            <div class="section">
+                <div class="section-title"><span>4</span> <span class="t-payment">ការបង់ប្រាក់</span></div>
+                <div class="payment-grid">
+                    <div class="payment-card" onclick="selectPayment(this, 'ABA Pay')">ABA Pay</div>
+                    <div class="payment-card" onclick="selectPayment(this, 'Wing')">Wing</div>
+                    <div class="payment-card" onclick="selectPayment(this, 'KHQR')">KHQR</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Side: Summary -->
+        <div class="right-panel">
+            <div class="section summary-box">
+                <!-- Only image shown here, no game name -->
+                <img src="" id="summaryImage" class="summary-image" alt="Selected Game">
+                
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span class="t-id">លេខសម្គាល់:</span>
+                        <strong id="sumId">-</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span class="t-item">កញ្ចប់:</span>
+                        <strong id="sumItem">-</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span class="t-pay-via">បង់តាម:</span>
+                        <strong id="sumPay">-</strong>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid var(--text-muted); margin: 15px 0;">
+                    <div class="summary-row">
+                        <span class="t-total">សរុប:</span>
+                        <span class="total-price" id="sumTotal">$0.00</span>
+                    </div>
+                </div>
+
+                <button class="btn-buy t-buy-now" onclick="buyNow()">ទិញឥឡូវនេះ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Variables
+        let selectedGameImg = '';
+        let selectedPackage = '';
+        let selectedPrice = '$0.00';
+        let selectedPayment = '';
+        let isKhmer = true;
+
+        // Language Dictionary
+        const translations = {
+            'km': {
+                't-select-game': 'ជ្រើសរើសហ្គេម',
+                't-enter-id': 'បញ្ចូលលេខសម្គាល់ (ID)',
+                't-placeholder-id': 'លេខសម្គាល់ Player ID',
+                't-placeholder-zone': 'Zone ID (បើមាន)',
+                't-select-package': 'ជ្រើសរើសកញ្ចប់',
+                't-payment': 'ការបង់ប្រាក់',
+                't-id': 'លេខសម្គាល់:',
+                't-item': 'កញ្ចប់:',
+                't-pay-via': 'បង់តាម:',
+                't-total': 'សរុប:',
+                't-buy-now': 'ទិញឥឡូវនេះ',
+                'lang-btn': '🇬🇧 English'
+            },
+            'en': {
+                't-select-game': 'Select Game',
+                't-enter-id': 'Enter Player ID',
+                't-placeholder-id': 'Player ID',
+                't-placeholder-zone': 'Zone ID (Optional)',
+                't-select-package': 'Select Package',
+                't-payment': 'Payment Method',
+                't-id': 'Player ID:',
+                't-item': 'Item:',
+                't-pay-via': 'Pay Via:',
+                't-total': 'Total:',
+                't-buy-now': 'Buy Now',
+                'lang-btn': '🇰🇭 ខ្មែរ'
+            }
+        };
+
+        // Functions
+        function selectGame(element, imgPath) {
+            document.querySelectorAll('.game-card').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            selectedGameImg = imgPath;
+            
+            const sumImg = document.getElementById('summaryImage');
+            sumImg.src = imgPath;
+            sumImg.style.display = 'block'; // Show image
+        }
+
+        function selectPackage(element, pkg, price) {
+            document.querySelectorAll('.package-card').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            selectedPackage = pkg;
+            selectedPrice = price;
+            updateSummary();
+        }
+
+        function selectPayment(element, method) {
+            document.querySelectorAll('.payment-card').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            selectedPayment = method;
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const idVal = document.getElementById('playerId').value;
+            document.getElementById('sumId').innerText = idVal ? idVal : '-';
+            document.getElementById('sumItem').innerText = selectedPackage ? selectedPackage : '-';
+            document.getElementById('sumTotal').innerText = selectedPrice;
+            document.getElementById('sumPay').innerText = selectedPayment ? selectedPayment : '-';
+        }
+
+        function buyNow() {
+            if (!selectedGameImg) return alert(isKhmer ? 'សូមជ្រើសរើសហ្គេម!' : 'Please select a game!');
+            if (!document.getElementById('playerId').value) return alert(isKhmer ? 'សូមបញ្ចូល ID!' : 'Please enter ID!');
+            if (!selectedPackage) return alert(isKhmer ? 'សូមជ្រើសរើសកញ្ចប់!' : 'Please select a package!');
+            if (!selectedPayment) return alert(isKhmer ? 'សូមជ្រើសរើសការបង់ប្រាក់!' : 'Please select payment method!');
+            
+            alert(isKhmer ? 'កំពុងដំណើរការ...' : 'Processing...');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                btn.innerText = '☀️ ថ្ងៃ'; // Switch to light text
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerText = '🌙 យប់'; // Switch to dark text
+            }
+        }
+
+        function toggleLanguage() {
+            isKhmer = !isKhmer;
+            const lang = isKhmer ? 'km' : 'en';
+            const dict = translations[lang];
+
+            for (const key in dict) {
+                const elements = document.querySelectorAll(`.${key}`);
+                elements.forEach(el => {
+                    if (el.tagName === 'INPUT') {
+                        el.placeholder = dict[key];
+                    } else {
+                        el.innerText = dict[key];
+                    }
+                });
+            }
+            document.getElementById('langToggle').innerText = dict['lang-btn'];
+        }
+    </script>
+</body>
+</html>
